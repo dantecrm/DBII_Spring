@@ -1,0 +1,80 @@
+	public static void test1() throws UnknownHostException {
+		// conection to MongoDB
+		MongoClient client = new MongoClient();
+		// use DB
+		DB course = client.getDB("course");
+		
+		// use collection
+		DBCollection person = course.getCollection("person");
+		
+		System.out.println(person.count());
+		
+		BasicDBObject doc = new BasicDBObject();
+		doc.put("name", "Jessica");
+		doc.put("lastName","Mamani Condori");
+		doc.put("age", 20);
+		doc.put("status", "Active");
+		
+		person.insert(doc);
+		
+		person = course.getCollection("person");
+		
+		System.out.println(person.count());
+		
+	}
+
+
+
+	public static void test2() throws UnknownHostException {
+		// conection to MongoDB
+		MongoClient client = new MongoClient();
+		// use DB
+		DB course = client.getDB("course");
+
+		// use collection
+		DBCollection collection = course.getCollection("findTest");
+
+		// delete the information of the collection findTest
+		collection.drop();
+		for (int i = 0; i < 10; i++) {
+			collection
+					.insert(new BasicDBObject("x", new Random().nextInt(100)));
+		}
+		System.out
+				.println("Insert on the collection findTest 100 rows of numbers");
+
+		collection = course.getCollection("findTest");
+		System.out.println(collection.count());
+
+		// for get only one row
+		DBObject oneRow = collection.findOne();
+		System.out.println("oneRow : " + oneRow);
+
+		// iterate the collection findTest
+		DBCursor cursor = collection.find();
+		System.out.println("Show all row of collection findTest");
+		int count =0;
+		for (DBObject dbObject : cursor) {
+			count++;
+			System.out.println("# "+count+"  dbObject: "+dbObject+" value of X: "+dbObject.get("x"));
+		}
+
+	}
+
+
+	public static void test3() throws UnknownHostException {
+		MongoClient client = new MongoClient("localhost", 27017);
+		DB course = client.getDB("course");
+		DBCollection person = course.getCollection("person");
+
+		BasicDBObject personSearch = new BasicDBObject();
+		personSearch.put("name", "David");
+
+		DBCursor cursor = person.find(personSearch);
+		int count = 0;
+		for (DBObject dbObject : cursor) {
+			count++;
+			System.out.println("# " + count + "  dbObject: " + dbObject);
+		}
+
+	} 

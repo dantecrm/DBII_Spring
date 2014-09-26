@@ -1,0 +1,111 @@
+package pe.edu.union.mongo;
+
+
+import java.net.UnknownHostException;
+import java.util.Random;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+
+
+
+public class ExampleMongo {
+	
+    public  void test1() throws java.net.UnknownHostException {
+   
+    	// conection to MongoDB
+    	MongoClient client = new MongoClient();
+    	// use DB
+    	DB course = client.getDB("course");
+    	// use collection
+    	DBCollection person = course.getCollection("person");
+    	
+    	System.out.println(person.count());
+    	
+    	
+    	BasicDBObject doc=new BasicDBObject();
+    	doc.put("name", "Sofia");
+    	doc.put("lastname","Paco Mamani");
+    	doc.put("age", 25);
+    	doc.put("status","Active");
+    	
+    	person.insert(doc);
+    	
+    	person = course.getCollection("person");
+    	
+    	System.out.println(person.count());
+	}
+	
+    public  void test2() throws java.net.UnknownHostException {
+    	// conection to MongoDB
+		MongoClient client = new MongoClient();
+    	// use DB
+    	DB course = client.getDB("course");
+
+    	// use collection
+    	DBCollection collection = course.getCollection("findTest");
+
+    	// delete the information of the collection findTest
+    	collection.drop();
+    	for (int i = 0; i < 10; i++) {
+    		collection
+    				.insert(new BasicDBObject("x", new Random().nextInt(100)));
+    	}
+    	System.out.println("Insert on the collection findTest 100 rows of numbers");
+    	
+    	collection = course.getCollection("findTest");
+    	System.out.println(collection.count());
+    	
+    	// for get only one row
+    	DBObject oneRow = collection.findOne();
+    	System.out.println("oneRow: "+oneRow);
+    	
+    	// iterate the collection findTest
+    	DBCursor cursor = collection.find();
+    	System.out.println("Show all row of collection findTest");
+    	int count = 0;
+    	for (DBObject dbObject : cursor) {
+    		count++;
+    		System.out.println("#"+count+" dbObject+" + dbObject + "value of x: "+ dbObject.get("x"));
+    	}
+    	
+       		
+   
+	}
+    
+    public  static void test3() throws java.net.UnknownHostException {
+    	MongoClient client = new MongoClient("localhost", 27017);
+		DB course = client.getDB("course");
+		DBCollection person = course.getCollection("person");
+
+		BasicDBObject personSearch = new BasicDBObject();
+		personSearch.put("name", "Sofia");
+
+		DBCursor cursor = person.find(personSearch);
+		int count = 0;
+		for (DBObject dbObject : cursor) {
+			count++;
+			System.out.println("# " + count + "  dbObject: " + dbObject);
+		}
+    }
+ 
+   public static void main(String[] args) throws UnknownHostException {
+   		
+//   		test1();
+//   		test2();
+   		test3();
+   }
+                            	
+	
+/** 
+ * This is a method main
+ * @param args
+ * @throws UnknownHostException 
+ */
+	
+
+}

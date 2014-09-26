@@ -1,0 +1,3 @@
+Para comentar 
+
+Ctrl + Shift + c
